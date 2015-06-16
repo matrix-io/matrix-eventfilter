@@ -57,5 +57,12 @@ describe('filters', function(){
     });
   });
 
+  it('should support contains', function(done){
+    StreamFilter.on('boxy').contains('name', 'docker').then(function(out) {
+      (out.boxy).should.containDeep([{name: { '$match': 'docker'}}]);
+      done();
+    });
+  });
+
 
 });
