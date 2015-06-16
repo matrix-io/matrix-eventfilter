@@ -65,4 +65,12 @@ describe('filters', function(){
   });
 
 
+  it('should support near', function(done){
+    StreamFilter.on('mapy').near([25,80], 1).then(function(out){
+      (out.mapy).should.containDeep([{location: {point: [25,80], range: 1}}]);
+      done();
+    });
+  })
+
+
 });
