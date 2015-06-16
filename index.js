@@ -5,7 +5,8 @@
  * @author Sean Canton <sean@rokk3rlabs.com>
  * @example
  * var E = require(this);
- * var e = new E.streamFilter( <EventStream> )
+ * var e = new E.streamFilter( <EventStream> );
+ * e.on('face').is('age', 20).is('gender','male');
  * {
  *   token: 'abc123',
  *   face: [{ age: 20 }, {gender: 'male'}],
@@ -34,6 +35,13 @@ var S = function( EventStream ) {
   this.contains = function EventContains( stack, needle ) {
     var obj = {};
     obj[stack] = { '$match' : needle };
+    filters.push(obj);
+    return this;
+  }
+
+  this.not = function EventNot( factor, value ){
+    var obj = {};
+    obj[factor] = { '$not' : value };
     filters.push(obj);
     return this;
   }
@@ -103,23 +111,6 @@ function authStream(id, secret, cb){
       cb();
     });
   }
-
-// var s = new S();
-
-// s.on('poop')
-// .is('smelly', true)
-// .is('fun', false)
-// .is({ ohmy: true, mally: false})
-// .is('quantity', { $gt: 12 })
-// .like('yay', false)
-// .near([25,80], 1)
-// .then(function(out){
-//   // return object to filter
-// });
-
-// s.on('vehicle')
-// .is('truck', true)
-// .then(function() {});
 
 module.exports = {
   StreamFilter : S,

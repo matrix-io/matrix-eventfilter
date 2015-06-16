@@ -17,7 +17,7 @@ describe('filters', function(){
   })
 
   it('should make thing', function(done){
-    (StreamFilter).should.have.any.keys('on', 'is', 'near', 'like', 'contains', 'then');
+    (StreamFilter).should.have.any.keys('on', 'not', 'is', 'near', 'like', 'contains', 'then');
     done();
   });
 
@@ -64,6 +64,12 @@ describe('filters', function(){
     });
   });
 
+  it('should support not', function(done){
+    StreamFilter.on('face').not('age', 20).then(function(out) {
+      (out.face).should.containDeep([{age: { '$not': 20}}]);
+      done();
+    });
+  });
 
   it('should support near', function(done){
     StreamFilter.on('mapy').near([25,80], 1).then(function(out){
