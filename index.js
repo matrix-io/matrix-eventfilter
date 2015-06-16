@@ -1,21 +1,32 @@
 'use strict';
 
+/**
+ * Creates filter objects for event streams.
+ * @author Sean Canton <sean@rokk3rlabs.com>
+ * @example
+ * var E = require(this);
+ * var e = new E.streamFilter( <EventStream> )
+ * {
+ *   token: 'abc123',
+ *   face: [{ age: 20 }, {gender: 'male'}],
+ *   stream: <EventStream>
+ * }
+ *
+ */
+
 var request = require('request');
 
 var authToken;
 
 var S = function( EventStream ) {
-
-  if ( typeof EventStream === "undefined" ){
-    console.warn('No Event Stream Passed');
-  }
-  var chainObj;
+  var filters;
   var obj = { stream: EventStream };
   var token;
 
   this.on = function EventOn( eventName ) {
     obj[ eventName ] = [];
-    chainObj = obj[ eventName ];
+    // makes { eventname: [] }
+    filters = obj[ eventName ];
     obj.token = module.exports.token;
     return this;
   }
@@ -23,7 +34,7 @@ var S = function( EventStream ) {
   this.contains = function EventContains( stack, needle ) {
     var obj = {};
     obj[stack] = { '$match' : needle };
-    chainObj.push(obj);
+    filters.push(obj);
     return this;
   }
 
@@ -33,20 +44,22 @@ var S = function( EventStream ) {
     if (typeof factor === 'object'){
       // multiple declarations
       for (var k in factor){
+        obj = {};
         obj[k] = factor[k];
+        filters.push(obj);
       }
     } else {
       // single declaration
       obj[factor] = value;
+      filters.push(obj);
     }
-    chainObj.push(obj);
     return this;
   }
 
   this.near = function EventNear( point, range ){
     var obj = {};
     obj.location = { point: point, range: range};
-    chainObj.push(obj);
+    filters.push(obj);
     return this;
   }
 
