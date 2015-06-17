@@ -4,6 +4,7 @@
 * stream.start([Environment]);
 * stream.on([Event]);
 * stream.like([Key],[Value]);
+* stream.is([Key],[Value]);
 * stream.not([Key],[Value]);
 * stream.contains([Key],[Value]);
 * stream.near([Latitude,Longitude],[Radius]);
