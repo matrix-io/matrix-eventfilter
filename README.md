@@ -1,13 +1,13 @@
 ## Events SDK
 
 #### Available Methods
-* stream.start([Environment]);
-* stream.on([Event]);
-* stream.like([Key],[Value]);
-* stream.is([Key],[Value]);
-* stream.not([Key],[Value]);
-* stream.contains([Key],[Value]);
-* stream.near([Latitude,Longitude],[Radius]);
+* start([Environment]);
+* on([Event]);
+* like([Key],[Value]);
+* is([Key],[Value]);
+* not([Key],[Value]);
+* contains([Key],[Value]);
+* near([Latitude,Longitude],[Radius]);
 
 ###Initialize Stream
 ```javascript
