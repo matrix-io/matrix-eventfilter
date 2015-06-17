@@ -16,9 +16,7 @@
   "author": "Sean Canton",
   "license": "ISC",
   "dependencies": {
-    "request": "^2.58.0"
-  },
-  "devDependencies": {
+    "request": "^2.58.0",
     "mocha": "^2.2.5",
     "should": "^6.0.3"
   }
