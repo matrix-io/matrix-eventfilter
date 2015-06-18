@@ -224,35 +224,3 @@ module.exports = {
   init : authStream,
   token : authToken
 };
-
-
-// var p = new S('body');
-// //TODO: Handle multiple s's for return events
-// // Prevent Overlap
-
-// //bootstrap
-// function boot() {
-//   //socket here
-// }
-
-// function trackFaces() {
-//   var s = new S('face');
-
-//   s.has('anger').between(20,40).is({gender: undefined})
-//   has('gender').then();
-//   has('stupid').under(20)
-//   s.has('stupid').under(20)
-//   s.has('rich').above(100000);
-
-//   s.is({ age: { '$gt' : 20, '$lt': 40 }, gender: 'male'}).then(function(data){
-//     // throw alert
-//   });
-// }
-
-// p.is().is().then(function(){
-
-// });
-
-
-
-// console.log(s);
