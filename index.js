@@ -6,12 +6,13 @@
  * @example
  * var E = require(this);
  * var e = new E.streamFilter( );
- * e.on('face').is('age', 20).is('gender','male');
+ * e.on('face').is('age', 20).is('gender','male').then(function(out){});
  * {
  *   token: 'abc123',
  *   face: [{ age: 20 }, {gender: 'male'}]
  * }
  *
+ * .then() fires off the socket and returns the filter object
  */
 
 var net = require('net');
@@ -27,8 +28,8 @@ var authToken;
 
 var EventFilter = function( label ) {
   this.eventName = label;
-  this.filters = [];
   var obj = {};
+  this.filters = [];
 
   if ( filterCollection.filter(function(v){ return v.eventName === label }).length > 0 ){
     console.warn('Multiple filters named ', label, '\nBehavior unstable.')
@@ -36,7 +37,6 @@ var EventFilter = function( label ) {
 
   filterCollection.push(this);
 
-  this.has =
   this.on = function EventOn( event ) {
     obj[ event ] = [];
     // makes { event: [] }
@@ -92,6 +92,7 @@ var EventFilter = function( label ) {
     // e.on( this.eventName, cb );
     // send filter to socket
     // socket.write( JSON.stringify({ filters: filters, eventName: eventName } ) );
+
     cb( { filters: this.filters, eventName: this.eventName } );
     return this;
   }
@@ -116,17 +117,6 @@ var EventFilter = function( label ) {
     return new hasExtender(this, factor);
   }
 
-  this.hasExtender = function(self, factor){
-    this.between = function(min,max){
-      var obj = {};
-      obj[factor] = {'$gt':min, '$lt':max}
-      this.filters.push(obj);
-      return self;
-    }
-
-    return
-  }
-
 
 
   return this;
@@ -135,10 +125,42 @@ var EventFilter = function( label ) {
 
 var hasExtender = function (self, factor){
 
-  this.between = function(min,max){
-    var obj = {};
-    obj[factor] = {'$gt':min, '$lt':max};
+  var obj = {};
 
+  this.between = function(min,max){
+    obj[factor] = {'$gte':min, '$lte':max};
+    self.filters.push(obj);
+    return self;
+  }
+
+  this.within = function(value){
+    obj[factor] = value;
+    self.filters.push(obj);
+    return self;
+  }
+
+  this.over =
+  this.above = function(value){
+    obj[factor] = {'$gte' : value};
+    self.filters.push(obj);
+    return self;
+  }
+
+  this.under =
+  this.below = function(value){
+    obj[factor] = {'$lte' : value};
+    self.filters.push(obj);
+    return self;
+  }
+
+  this.not = function(value){
+    obj[factor] = {'not' : value};
+    self.filters.push(obj);
+    return self;
+  }
+
+  this.of = function(value){
+    obj[factor] = value;
     self.filters.push(obj);
     return self;
   }
@@ -146,10 +168,16 @@ var hasExtender = function (self, factor){
   return this;
 }
 
+var BASELINE = 100;
+var STORE_ENTRY_CAMS = [ 10, 11, 12 ];
 var face = new EventFilter('face');
 
-face.has('age').between(10,20).then(function(out){
-    console.log(require('util').inspect(out, {showHidden: true, depth:10}));
+face.has('age').between(13,24)
+.is({ grumpy: BASELINE })
+.has('gender').of('female')
+.has('device').within(STORE_ENTRY_CAMS)
+.then(function(out){
+    console.log(require('util').inspect(out, {depth:10}));
 });
 
 
