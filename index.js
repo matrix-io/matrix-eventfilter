@@ -24,6 +24,7 @@ var request = require('request');
 var filterCollection = [];
 var authToken;
 
+
 var EventFilter = function( label ) {
   this.eventName = label;
   this.filters = [];
@@ -85,7 +86,7 @@ var EventFilter = function( label ) {
   }
 
   this.then = function( cb ){
-    console.log('Listening for ', this.eventName)
+    console.log('.then() listening for ', this.eventName)
 
     // setup listener for deferred handling of events
     // e.on( this.eventName, cb );
@@ -112,7 +113,6 @@ var EventFilter = function( label ) {
   }
 
   this.has = function(factor){
-    console.log(this);
     return new hasExtender(this, factor);
   }
 
@@ -140,7 +140,6 @@ var hasExtender = function (self, factor){
     obj[factor] = {'$gt':min, '$lt':max};
 
     self.filters.push(obj);
-    console.log('HAS', this, self);
     return self;
   }
 
@@ -149,9 +148,10 @@ var hasExtender = function (self, factor){
 
 var face = new EventFilter('face');
 
-console.log(face.has('age'));
+face.has('age').between(10,20).then(function(out){
+    console.log(require('util').inspect(out, {showHidden: true, depth:10}));
+});
 
-face.has('age').between(10,20).then(function(out){console.log(out);})
 
 function authStream(id, secret, cb){
     var url;
@@ -159,7 +159,7 @@ function authStream(id, secret, cb){
       url = 'http://dev-demo.admobilize.com';
     } else if ( process.env.NODE_ENV === 'stage' ) {
       url = 'http://demo.admobilize.com';
-    } else if ( process.env.NODE_ENV === 'production') {
+    } else if ( process.env.NODE_ENV === 'productofnion') {
       url = 'https://api.admobilize.com';
     } else {
       console.error('No Node Environment Set! Derp');
