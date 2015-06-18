@@ -24,9 +24,9 @@ var request = require('request');
 var filterCollection = [];
 var authToken;
 
-var S = function( label ) {
-  var eventName = label;
-  var filters = [];
+var EventFilter = function( label ) {
+  this.eventName = label;
+  this.filters = [];
   var obj = {};
 
   if ( filterCollection.filter(function(v){ return v.eventName === label }).length > 0 ){
@@ -35,10 +35,11 @@ var S = function( label ) {
 
   filterCollection.push(this);
 
+  this.has =
   this.on = function EventOn( event ) {
     obj[ event ] = [];
     // makes { event: [] }
-    filters = obj[ event ];
+    this.filters = obj[ event ];
     obj.token = authToken;
     return this;
   }
@@ -46,14 +47,14 @@ var S = function( label ) {
   this.contains = function EventContains( stack, needle ) {
     var obj = {};
     obj[stack] = { '$match' : needle };
-    filters.push(obj);
+    this.filters.push(obj);
     return this;
   }
 
   this.not = function EventNot( factor, value ){
     var obj = {};
     obj[factor] = { '$not' : value };
-    filters.push(obj);
+    this.filters.push(obj);
     return this;
   }
 
@@ -65,12 +66,12 @@ var S = function( label ) {
       for (var k in factor){
         obj = {};
         obj[k] = factor[k];
-        filters.push(obj);
+        this.filters.push(obj);
       }
     } else {
       // single declaration
       obj[factor] = value;
-      filters.push(obj);
+      this.filters.push(obj);
     }
 
     return this;
@@ -79,18 +80,18 @@ var S = function( label ) {
   this.near = function EventNear( point, range ){
     var obj = {};
     obj.location = { point: point, range: range};
-    filters.push(obj);
+    this.filters.push(obj);
     return this;
   }
 
   this.then = function( cb ){
-    console.log('Listening for ', eventName)
+    console.log('Listening for ', this.eventName)
 
     // setup listener for deferred handling of events
     // e.on( this.eventName, cb );
     // send filter to socket
     // socket.write( JSON.stringify({ filters: filters, eventName: eventName } ) );
-    cb( obj );
+    cb( { filters: this.filters, eventName: this.eventName } );
     return this;
   }
 
@@ -103,15 +104,54 @@ var S = function( label ) {
   }
 
   this.getFilters = function(){
-    return filters;
+    return this.filters;
   }
 
   this.getEventName = function(){
     return eventName;
   }
 
+  this.has = function(factor){
+    console.log(this);
+    return new hasExtender(this, factor);
+  }
+
+  this.hasExtender = function(self, factor){
+    this.between = function(min,max){
+      var obj = {};
+      obj[factor] = {'$gt':min, '$lt':max}
+      this.filters.push(obj);
+      return self;
+    }
+
+    return
+  }
+
+
+
   return this;
 }
+
+
+var hasExtender = function (self, factor){
+
+  this.between = function(min,max){
+    var obj = {};
+    obj[factor] = {'$gt':min, '$lt':max};
+
+    self.filters.push(obj);
+    console.log('HAS', this, self);
+    return self;
+  }
+
+  return this;
+}
+
+var face = new EventFilter('face');
+
+console.log(face.has('age'));
+
+face.has('age').between(10,20).then(function(out){console.log(out);})
 
 function authStream(id, secret, cb){
     var url;
@@ -152,16 +192,39 @@ function authStream(id, secret, cb){
 
 
 module.exports = {
-  StreamFilter : S,
+  StreamFilter : EventFilter,
   init : authStream,
   token : authToken
 };
 
-var s = new S('');
-//TODO: Handle multiple s's for return events
-// Prevent Overlap
 
-s.on('face').is({ age: { '$gt' : 20, '$lt': 40 }, gender: 'male'}).then(function(out){console.log(require('util').inspect(out, true, 10));});
+// var p = new S('body');
+// //TODO: Handle multiple s's for return events
+// // Prevent Overlap
 
-s.on('').is().is().then().then()
-console.log(s);
+// //bootstrap
+// function boot() {
+//   //socket here
+// }
+
+// function trackFaces() {
+//   var s = new S('face');
+
+//   s.has('anger').between(20,40).is({gender: undefined})
+//   has('gender').then();
+//   has('stupid').under(20)
+//   s.has('stupid').under(20)
+//   s.has('rich').above(100000);
+
+//   s.is({ age: { '$gt' : 20, '$lt': 40 }, gender: 'male'}).then(function(data){
+//     // throw alert
+//   });
+// }
+
+// p.is().is().then(function(){
+
+// });
+
+
+
+// console.log(s);

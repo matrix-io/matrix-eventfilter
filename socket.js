@@ -5,6 +5,11 @@ net.createServer(function(socket){
 
   socket.on('data', function(data){
     console.log('Server Socket Data', JSON.parse(data.toString()));
+
+
+
+
+
     socket.write(data);
   });
 
