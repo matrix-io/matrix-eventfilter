@@ -17,7 +17,7 @@ describe('filters', function(){
   })
 
   it('should make thing', function(done){
-    (StreamFilter).should.have.any.keys('on', 'not', 'is', 'near', 'like', 'contains', 'then');
+    (StreamFilter).should.have.any.keys('on', 'enable', 'disable', 'not', 'is', 'near', 'like', 'contains', 'then');
     done();
   });
 
@@ -76,7 +76,7 @@ describe('filters', function(){
       (out.mapy).should.containDeep([{location: {point: [25,80], range: 1}}]);
       done();
     });
-  })
+  });
 
 
 });

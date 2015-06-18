@@ -5,30 +5,41 @@
  * @author Sean Canton <sean@rokk3rlabs.com>
  * @example
  * var E = require(this);
- * var e = new E.streamFilter( <EventStream> );
+ * var e = new E.streamFilter( );
  * e.on('face').is('age', 20).is('gender','male');
  * {
  *   token: 'abc123',
- *   face: [{ age: 20 }, {gender: 'male'}],
- *   stream: <EventStream>
+ *   face: [{ age: 20 }, {gender: 'male'}]
  * }
  *
  */
 
+var net = require('net');
+var socket = new net.Socket()
+
+var events = require('events');
+var e = new events.EventEmitter();
 var request = require('request');
 
+var filterCollection = [];
 var authToken;
 
-var S = function( EventStream ) {
-  var filters;
-  var obj = { stream: EventStream };
-  var token;
+var S = function( label ) {
+  var eventName = label;
+  var filters = [];
+  var obj = {};
 
-  this.on = function EventOn( eventName ) {
-    obj[ eventName ] = [];
-    // makes { eventname: [] }
-    filters = obj[ eventName ];
-    obj.token = module.exports.token;
+  if ( filterCollection.filter(function(v){ return v.eventName === label }).length > 0 ){
+    console.warn('Multiple filters named ', label, '\nBehavior unstable.')
+  }
+
+  filterCollection.push(this);
+
+  this.on = function EventOn( event ) {
+    obj[ event ] = [];
+    // makes { event: [] }
+    filters = obj[ event ];
+    obj.token = authToken;
     return this;
   }
 
@@ -61,6 +72,7 @@ var S = function( EventStream ) {
       obj[factor] = value;
       filters.push(obj);
     }
+
     return this;
   }
 
@@ -72,7 +84,30 @@ var S = function( EventStream ) {
   }
 
   this.then = function( cb ){
+    console.log('Listening for ', eventName)
+
+    // setup listener for deferred handling of events
+    // e.on( this.eventName, cb );
+    // send filter to socket
+    // socket.write( JSON.stringify({ filters: filters, eventName: eventName } ) );
     cb( obj );
+    return this;
+  }
+
+  this.enable = function( cb ){
+    console.log('Enabling', eventName)
+  }
+
+  this.disable = function(cb){
+    //e.removeListener(this.name, cb)
+  }
+
+  this.getFilters = function(){
+    return filters;
+  }
+
+  this.getEventName = function(){
+    return eventName;
   }
 
   return this;
@@ -108,12 +143,25 @@ function authStream(id, secret, cb){
         authToken = JSON.parse(body).results.access_token;
         module.exports.token = authToken;
       }
+      // TODO: Initialize Socket Connection
+      // socket.connect(xxxx, function(){})
+      // TODO: Handle Incoming Sockets, emit events
       cb();
     });
   }
+
 
 module.exports = {
   StreamFilter : S,
   init : authStream,
   token : authToken
 };
+
+var s = new S('');
+//TODO: Handle multiple s's for return events
+// Prevent Overlap
+
+s.on('face').is({ age: { '$gt' : 20, '$lt': 40 }, gender: 'male'}).then(function(out){console.log(require('util').inspect(out, true, 10));});
+
+s.on('').is().is().then().then()
+console.log(s);
