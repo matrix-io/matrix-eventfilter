@@ -3,7 +3,7 @@ var events = require('./');
 
 
 var StreamFilter;
-describe('filters', function(){
+describe('EventFilter instance', function(){
 
   before(function(done){
     this.timeout = 10000;
@@ -28,8 +28,8 @@ describe('filters', function(){
     });
   });
 
-  it('should do is or like to add filters', function(done){
-    StreamFilter.on('thing')
+  it('should do is() or like() to add filters', function(done){
+    StreamFilter
       .is('dog', true)
       .like('cat', false)
       .then(function(out){
@@ -39,17 +39,9 @@ describe('filters', function(){
       });
   });
 
-  it('should support multiple event types', function(done){
-    StreamFilter.on('otherThing').on('thing')
-    .is('amazing', true)
-    .then(function(out){
-      (out).should.have.properties('thing', 'otherThing');
-      done();
-    })
-  });
 
   it('should support object constructors', function(done){
-    StreamFilter.on('UrHonorIObject')
+    StreamFilter
     .is({ crime: false, falselyAccused: true, yearsFacing : 10})
     .then(function(out){
       (out.UrHonorIObject).should.length(3);
@@ -77,6 +69,4 @@ describe('filters', function(){
       done();
     });
   });
-
-
 });
