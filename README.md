@@ -1,9 +1,4 @@
-/*
-Title: Streaming API on Device & Server
-Sort: 1
-*/
-
-# Instance Methods
+# Instance Methods for Streaming API on Device & Server
 
 **Initialize With**
 
