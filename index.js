@@ -118,6 +118,10 @@ var _ = require('lodash');
     return new hasExtender(this, factor);
   }
 
+  this.clear = function(){
+    this.filters = [];
+  }
+
   this.and = this;
 
   return this;
@@ -157,7 +161,7 @@ var hasExtender = function (self, factor){
   }
 
   this.not = function(value){
-    obj[factor] = {'not' : value};
+    obj[factor] = {'$not' : value};
     self.filters.push(obj);
     return self;
   }
@@ -168,8 +172,6 @@ var hasExtender = function (self, factor){
     return self;
   }
 
-
-
   return this;
 }
 
@@ -177,6 +179,7 @@ var hasExtender = function (self, factor){
 
 
 function authStream(id, secret, cb){
+  return cb();
   var url;
   if ( process.env.NODE_ENV === 'development' ){
     url = 'http://dev-demo.admobilize.com';
@@ -244,7 +247,7 @@ face.has('age').between(10,35).and.is('sex', 1)
       socket.write('{ "pissant" : false }');
     setInterval(function writeFakeFace(){
       socket.write('{ "pissant" : true }');
-    }, 5000)
+    }, 10000)
   });
 
   socket.on('data', function(data) {
@@ -292,11 +295,15 @@ function applyFilter( filter, object ){
 
             console.log('====', f, '|', fa, '::', fav);
             if (fa == '$lte') {
-              subpass.push(!!(objValue <= fav))
+              subpass.push((objValue <= fav))
             }
             if (fa === '$gte') {
-              subpass.push(!!(objValue >= fav))
+              subpass.push((objValue >= fav))
             }
+            if (fa === '$match') {
+              subpass.push(objValue.search(/+fav+/).length > 0)
+            }
+
           }
 
           if ( subpass.length > 0 ){
@@ -335,4 +342,4 @@ function applyFilter( filter, object ){
   console.log('pass', pass);
   return (pass) ? object : null;
 }
-testSocket();
+// testSocket();

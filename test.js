@@ -3,70 +3,123 @@ var events = require('./');
 
 
 var StreamFilter;
-describe('EventFilter instance', function(){
+describe('EventFilter instance', function() {
 
-  before(function(done){
+  before(function(done) {
     this.timeout = 10000;
+    StreamFilter = new events.StreamFilter('test');
     process.env.NODE_ENV = "development";
     events.init("L04BU70GJU5S49JLNR783UK4UZSYWK0L", "Y7SRP3J1TDOQ49H4GP6AE3C35WXYN9OQ", done);
   });
 
-  beforeEach(function(done){
-    StreamFilter = new events.StreamFilter();
+  beforeEach(function(done) {
+    StreamFilter.clear();
     done();
   })
 
-  it('should make thing', function(done){
-    (StreamFilter).should.have.any.keys('on', 'enable', 'disable', 'not', 'is', 'near', 'like', 'contains', 'then');
+  it('should make thing', function(done) {
+    (StreamFilter.eventName).should.ok;
     done();
   });
 
-  it('should initialize and have a token', function(done){
-    StreamFilter.on('thing').then( function(out){
-      (out.token).should.ok;
+  it.skip('should initialize and have a token', function(done) {
+    StreamFilter.token.should.ok;
+    done();
+  });
+
+  it('should do is() or like() to add filters', function(done) {
+    StreamFilter.is('dog', true).like('cat', false)
+    StreamFilter.filters.should.containDeep([{
+      dog: true
+    }]);
+    done();
+  });
+
+
+  it('should support object constructors', function(done) {
+    StreamFilter.is({
+      crime: false,
+      falselyAccused: true,
+      yearsFacing: 10
+    })
+    StreamFilter.filters.should.length(3);
+    done();
+  });
+
+  describe('conditional objects', function() {
+
+    it('should support contains', function(done) {
+      StreamFilter.contains('name', 'docker')
+      StreamFilter.filters.should.containDeep([{
+        name: {
+          '$match': 'docker'
+        }
+      }]);
+      done();
+    });
+
+    it('should support not', function(done) {
+      StreamFilter.not('age', 20);
+      StreamFilter.filters.should.containDeep([{
+        age: {
+          '$not': 20
+        }
+      }]);
+      done();
+    });
+
+    it('should support near', function(done) {
+      StreamFilter.near([25, 80], 1);
+      StreamFilter.filters.should.containDeep([{
+        location: {
+          point: [25, 80],
+          range: 1
+        }
+      }]);
+      done();
+    });
+
+  });
+
+
+
+
+  describe('supports has()', function() {
+    it('has().between()', function(done) {
+      StreamFilter.has('age').between(18,25);
+      StreamFilter.filters.should.containDeep([{age: {'$gte':18,'$lte':25}}]);
+      done();
+    });
+
+    it('has().within()', function (done) {
+      StreamFilter.has('age').within([ 18,25,32 ]);
+      StreamFilter.filters.should.containDeep([{age: [18,25,32]}]);
+      done();
+    });
+
+    it('has().over()', function (done) {
+      StreamFilter.has('age').over(18);
+      StreamFilter.filters.should.containDeep([{age: {'$gte':18}}]);
+      done();
+    });
+
+    it('has().under()', function (done) {
+      StreamFilter.has('age').under(25);
+      StreamFilter.filters.should.containDeep([{age: {'$lte':25}}]);
+      done();
+    });
+
+    it('has().not()', function (done) {
+      StreamFilter.has('age').not(20);
+      StreamFilter.filters.should.containDeep([{age: {'$not':20}}]);
+      done();
+    });
+
+    it('has().of()', function (done) {
+      StreamFilter.has('age').of(18);
+      StreamFilter.filters.should.containDeep([{age: 18 }]);
       done();
     });
   });
 
-  it('should do is() or like() to add filters', function(done){
-    StreamFilter
-      .is('dog', true)
-      .like('cat', false)
-      .then(function(out){
-        (out.thing).should.containDeep([{dog: true}]);
-        (out.thing).should.containDeep([{cat: false}]);
-        done();
-      });
-  });
-
-
-  it('should support object constructors', function(done){
-    StreamFilter
-    .is({ crime: false, falselyAccused: true, yearsFacing : 10})
-    .then(function(out){
-      (out.UrHonorIObject).should.length(3);
-      done();
-    });
-  });
-
-  it('should support contains', function(done){
-    StreamFilter.on('boxy').contains('name', 'docker').then(function(out) {
-      (out.boxy).should.containDeep([{name: { '$match': 'docker'}}]);
-      done();
-    });
-  });
-
-  it('should support not', function(done){
-    StreamFilter.on('face').not('age', 20).then(function(out) {
-      (out.face).should.containDeep([{age: { '$not': 20}}]);
-      done();
-    });
-  });
-
-  it('should support near', function(done){
-    StreamFilter.on('mapy').near([25,80], 1).then(function(out){
-      (out.mapy).should.containDeep([{location: {point: [25,80], range: 1}}]);
-      done();
-    });
-  });
 });
