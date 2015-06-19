@@ -1,61 +1,90 @@
-## Events SDK
+/*
+Title: Streaming API on Device & Server
+Sort: 1
+*/
 
-#### Available Methods
-* start([Environment]);
-* on([Event]);
-* like([Key],[Value]);
-* is([Key],[Value]);
-* not([Key],[Value]);
-* contains([Key],[Value]);
-* near([Latitude,Longitude],[Radius]);
+# Instance Methods
 
-###Initialize Stream
-```javascript
-var adsdk = require('adsdk');
-var stream = adsdk.stream;
-var stream = stream.start(process.env.NODE_ENV);
+**Initialize With**
+
+```
+var StreamFilter = require('ad-events').StreamFilter;
+var face = new StreamFilter('face');
+var vehicle = new StreamFilter('vehicle');
 ```
 
-###Face Detection
-Acting on events should be easy. Trigger actions by using our event-filter methods.
-```javascript
-/** Scenario 1 **/ 
-stream.on('face')
-     .like('age',20)
-     .like('age',40)
-     .like('gender','male')
-     .like('gender','female')
-     .like('device',5)
-     .then(function(out) { 
-          //do something with output, like make a decision 
-     });
+## Example Usage
 
-/** Scenario 2 **/ 
-stream.on('face')
-     .not('age',20)
-     .then(function(out) { 
-          //do something with output, like make a decision 
-     });
+### Requires Then to Activate
+```
+// starts stream and queues callback 
+face.then(function(results, filter){})
 ```
 
-###Vehicle Detection
-Acting on events should be easy. Trigger actions by using our event-filter methods.
-```javascript
-stream.on('vehicle')
-     .like('truck', true)
-     .near([25.0000,80.0000],1)
-     .then(function(out) { 
-          //do something with output, like make a decision 
-     });
+### Basic Filters
+#### is / like
+```
+// single declaration
+face.is('age', 23)
+
+// object declaration
+face.is({ 'age' : 24, gender:'male' })
+
+// ranges
+face.is({'age': {'$lte': 24, '$gte': 18}})
 ```
 
-###Looking for a String
-Acting on events should be easy. Trigger actions by using our event-filter methods.
-```javascript
-stream.on('alert')
-     .contains('message', 'foo')
-     .near([25.0000,80.0000],1)
-     .then(function(out) { 
-          //do something with output, like make a decision 
-     });
+#### not
+
+Negation
+
+`face.not('device')`
+
+#### contains
+
+String match
+
+`vehicle.contains('make', 'Mustang')`
+
+#### near
+
+Point and range.
+
+`vehicle.near([25,80], 1)`
+
+### Complex Filters
+#### Has
+Has enables a subset of filters
+
+##### Between
+```
+face.has('age').between(18,25);
+```
+
+##### Within
+```
+face.has('device').within([12,13,14,16]);
+```
+
+##### After (Aliases: Over, Above)
+```
+vehicle.has('year').after(1960);
+```
+
+##### Before (Aliases: Under, Below)
+```
+vehicle.has('year').under(2000)
+```
+
+##### Of
+```
+vehicle.has('color').of('red')
+```
+
+### Real-World Examples
+Vehicles traveling at high speeds.
+```
+vehicle.has('year').before(1960).has('speed').above(70).then(function(response) {
+  console.log('Car is unsafe to drive at these speeds.');
+});
 ```
