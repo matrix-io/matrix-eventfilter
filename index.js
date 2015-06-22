@@ -27,7 +27,7 @@
 
 var _ = require('lodash');
 
- var EventFilter = require('lib/filter.js');
+ var EventFilter = require('./lib/filter');
 
  /*function( label ) {
   this.eventName = label;
@@ -128,55 +128,55 @@ var _ = require('lodash');
 
   return this;
 }
-*/
+// */
 
 
-var hasExtender = function (self, factor){
+// var hasExtender = function (self, factor){
 
-  var obj = {};
+//   var obj = {};
 
-  this.between = function(min,max){
-    obj[factor] = {'$gte':min, '$lte':max};
-    self.filters.push(obj);
-    return self;
-  }
+//   this.between = function(min,max){
+//     obj[factor] = {'$gte':min, '$lte':max};
+//     self.filters.push(obj);
+//     return self;
+//   }
 
-  this.within = function(value){
-    obj[factor] = value;
-    self.filters.push(obj);
-    return self;
-  }
+//   this.within = function(value){
+//     obj[factor] = value;
+//     self.filters.push(obj);
+//     return self;
+//   }
 
-  this.after =
-  this.over =
-  this.above = function(value){
-    obj[factor] = {'$gte' : value};
-    self.filters.push(obj);
-    return self;
-  }
+//   this.after =
+//   this.over =
+//   this.above = function(value){
+//     obj[factor] = {'$gte' : value};
+//     self.filters.push(obj);
+//     return self;
+//   }
 
-  this.before =
-  this.under =
-  this.below = function(value){
-    obj[factor] = {'$lte' : value};
-    self.filters.push(obj);
-    return self;
-  }
+//   this.before =
+//   this.under =
+//   this.below = function(value){
+//     obj[factor] = {'$lte' : value};
+//     self.filters.push(obj);
+//     return self;
+//   }
 
-  this.not = function(value){
-    obj[factor] = {'$not' : value};
-    self.filters.push(obj);
-    return self;
-  }
+//   this.not = function(value){
+//     obj[factor] = {'$not' : value};
+//     self.filters.push(obj);
+//     return self;
+//   }
 
-  this.of = function(value){
-    obj[factor] = value;
-    self.filters.push(obj);
-    return self;
-  }
+//   this.of = function(value){
+//     obj[factor] = value;
+//     self.filters.push(obj);
+//     return self;
+//   }
 
-  return this;
-}
+//   return this;
+// }
 
 
 
