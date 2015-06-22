@@ -1,15 +1,17 @@
 var should = require('should');
-var events = require('./');
-var applyFilter = require('./filter.js')
+var EventFilter = require('./lib/eventFilter');
+var applyFilter = require('./lib/applyFilter');
+var connect = require('./lib/connect');
 
 
-var StreamFilter = new events.StreamFilter('test');
+var StreamFilter = new EventFilter('test');
 describe('EventFilter', function() {
 
   before(function(done) {
     this.timeout = 10000;
     process.env.NODE_ENV = "development";
-    events.init("L04BU70GJU5S49JLNR783UK4UZSYWK0L", "Y7SRP3J1TDOQ49H4GP6AE3C35WXYN9OQ", done);
+    done();
+    // connect.init('',"L04BU70GJU5S49JLNR783UK4UZSYWK0L", "Y7SRP3J1TDOQ49H4GP6AE3C35WXYN9OQ", done);
   });
 
 
