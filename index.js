@@ -27,7 +27,9 @@
 
 var _ = require('lodash');
 
- var EventFilter = function( label ) {
+ var EventFilter = require('lib/filter.js');
+
+ /*function( label ) {
   this.eventName = label;
   var obj = {};
   this.filters = [];
@@ -126,6 +128,7 @@ var _ = require('lodash');
 
   return this;
 }
+*/
 
 
 var hasExtender = function (self, factor){

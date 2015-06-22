@@ -88,5 +88,5 @@ module.exports = function( filter, object ){
 }
 
   // console.log('pass', pass);
-  return (pass) ? object : null;
+  if (pass) return object;
 }
