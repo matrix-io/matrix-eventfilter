@@ -181,6 +181,12 @@ describe('EventFilter', function() {
       done();
     })
 
+    it('should filter within', function(done){
+      var filter = StreamFilter.has('age').within([18,25]);
+      applyFilter(filter, streamObj).should.property('type');
+      done();
+    })
+
   });
 
 });
