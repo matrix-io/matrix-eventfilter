@@ -4,7 +4,6 @@ var filter = require('./lib/applyFilter');
 server.start( function processFn(input){
   var inputFilter  = JSON.parse(input.toString());
   console.log('Server Socket Data', inputFilter);
-  setInterval(function(){
     var face = makeFakeFace();
     var result = filter(inputFilter, face );
     if ( typeof result === 'undefined'){
@@ -12,7 +11,6 @@ server.start( function processFn(input){
     } else {
       return face;
     }
-  })
 });
 
 function makeFakeFace(){

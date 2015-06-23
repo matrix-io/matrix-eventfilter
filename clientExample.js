@@ -21,10 +21,9 @@ face.has('age').between(10,50).then(function(out){
 socket.connect(8132, function(){
   console.log('Connected to Socket');
 
-  // socket.write('{ "pissant" : false }');
-  // setInterval(function writeFilterFace(){
-  //   socket.write(JSON.stringify(face.val()));
-  // }, 1000)
+  setInterval(function writeFilterFace(){
+    face.write(JSON.stringify(face.val()));
+  }, 1000)
 
   face.send(socket);
 });

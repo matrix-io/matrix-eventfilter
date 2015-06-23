@@ -193,12 +193,27 @@ describe('EventFilter', function() {
 
 });
 
-describe('supports over server callbacks', function(){
-  before(function(done){
+describe('supports over server ops & callbacks', function(){
+  var socket = new require('net').Socket();
+  var Server = require('./lib/server');
+  var StreamFilter =  new EventFilter('test');
+  var server;
 
-  })
+  it('supports then & send', function(done){
+    this.timeout(10000);
 
-  it('supports then()', function(done){
-    StreamFilter.then(done);
-  })
+    StreamFilter.is('age',18).then(function(out){
+      out.should.have.keys('eventName', 'filters');
+      done();
+    });
+
+    server = Server.start( function(data){
+      var inputFilter  = JSON.parse(data.toString());
+      return inputFilter;
+    })
+
+    socket.connect(8132, function(){
+      StreamFilter.send(socket);
+    });
+  });
 })
