@@ -77,9 +77,11 @@ describe('EventFilter', function() {
     it('should support near', function(done) {
       StreamFilter.near([25, 80], 1);
       StreamFilter.filters.should.containDeep([{
-        location: {
-          point: [25, 80],
-          range: 1
+        location:  {
+          $near: {
+            point: [25, 80],
+            range: 1
+          }
         }
       }]);
       done();
@@ -138,7 +140,8 @@ describe('EventFilter', function() {
         glasses: 0.55,
         beard: 0.23,
         sex: 1,
-        name: 'Goat'
+        name: 'Goat',
+        location: [ 25.01, 80.01 ]
       }
       done();
     });
@@ -171,6 +174,12 @@ describe('EventFilter', function() {
       applyFilter(filter, streamObj).should.property('type');
       done();
     });
+
+    it('should filter near', function(done){
+      var filter = StreamFilter.near([25,80],10000).val();
+      applyFilter(filter, streamObj).should.property('type');
+      done();
+    })
 
   });
 

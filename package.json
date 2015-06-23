@@ -16,6 +16,7 @@
   "author": "Sean Canton",
   "license": "ISC",
   "dependencies": {
+    "geo-distance": "^0.1.2",
     "lodash": "^3.9.3",
     "mocha": "^2.2.5",
     "request": "^2.58.0",
