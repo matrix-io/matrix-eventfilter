@@ -4,13 +4,15 @@ var filter = require('./lib/applyFilter');
 server.start( function processFn(input){
   var inputFilter  = JSON.parse(input.toString());
   console.log('Server Socket Data', inputFilter);
-  var face = makeFakeFace();
-  var result = filter(inputFilter, face );
-  if ( typeof result === 'undefined'){
-    return { 'ok':false, 'msg':'No face to match filter'};
-  } else {
-    return face;
-  }
+  setInterval(function(){
+    var face = makeFakeFace();
+    var result = filter(inputFilter, face );
+    if ( typeof result === 'undefined'){
+      return { 'ok':false, 'msg':'No face to match filter'};
+    } else {
+      return face;
+    }
+  })
 });
 
 function makeFakeFace(){

@@ -4,8 +4,8 @@ var EventFilter = require('./lib/eventFilter')
 var face = new EventFilter('face');
 
 
-face.has('age').between(10,35).then(function(out){
-  console.log(out);
+face.has('age').between(10,50).then(function(out){
+  console.log('Then Out', out);
 })
 
 
@@ -21,10 +21,12 @@ face.has('age').between(10,35).then(function(out){
 socket.connect(8132, function(){
   console.log('Connected to Socket');
 
-  socket.write('{ "pissant" : false }');
-  setInterval(function writeFakeFace(){
-    socket.write(JSON.stringify(face.val()));
-  }, 1000)
+  // socket.write('{ "pissant" : false }');
+  // setInterval(function writeFilterFace(){
+  //   socket.write(JSON.stringify(face.val()));
+  // }, 1000)
+
+  face.send(socket);
 });
 
 socket.on('data', function(data) {

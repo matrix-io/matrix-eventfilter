@@ -140,7 +140,7 @@ describe('EventFilter', function() {
         glasses: 0.55,
         beard: 0.23,
         sex: 1,
-        name: 'Goat',
+        name: 'Goat Jones',
         location: [ 25.01, 80.01 ]
       }
       done();
@@ -151,19 +151,14 @@ describe('EventFilter', function() {
       done();
     })
 
-    it('should filter direct integer matches', function(done){
+    it('should filter integer matches', function(done){
       var filter = StreamFilter.is('age', 18).val()
       applyFilter(filter, streamObj).should.property('type');
       done();
     });
 
-    it('should filter less / over / between', function(done) {
-      var filter = StreamFilter.has('age').between(10,20).val();
-      applyFilter(filter, streamObj).should.property('type');
-      done();
-    });
 
-    it('should filter direct matches', function(done){
+    it('should filter partial string matches', function(done){
       var filter = StreamFilter.contains('name','Goat').val();
       applyFilter(filter, streamObj).should.property('type');
       done();
@@ -179,14 +174,31 @@ describe('EventFilter', function() {
       var filter = StreamFilter.near([25,80],10000).val();
       applyFilter(filter, streamObj).should.property('type');
       done();
-    })
+    });
+
+    it('should filter has() less / over / between', function(done) {
+      var filter = StreamFilter.has('age').between(10,20).val();
+      applyFilter(filter, streamObj).should.property('type');
+      done();
+    });
 
     it('should filter within', function(done){
       var filter = StreamFilter.has('age').within([18,25]);
       applyFilter(filter, streamObj).should.property('type');
       done();
-    })
+    });
+
 
   });
 
 });
+
+describe('supports over server callbacks', function(){
+  before(function(done){
+
+  })
+
+  it('supports then()', function(done){
+    StreamFilter.then(done);
+  })
+})
