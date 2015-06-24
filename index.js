@@ -31,6 +31,11 @@ var _ = require('lodash');
 
 
 
+module.exports = {
+  EventFilter : require('./lib/eventFilter'),
+  apply: require('./lib/applyFilter')
+};
+
 
 
 function authStream(url, id, secret, cb){
@@ -63,12 +68,6 @@ function authStream(url, id, secret, cb){
 }
 
 
-module.exports = {
-  StreamFilter : EventFilter,
-  init : authStream,
-  // testSocket : testSocket,
-  token : authToken
-};
 
 var applyFilter = require('./lib/applyFilter.js')
 
