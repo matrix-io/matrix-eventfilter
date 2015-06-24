@@ -13,21 +13,21 @@
  * }
  *
  * .then() fires off the socket and returns the filter object
- */
+//  */
 
- var net = require('net');
- var socket = new net.Socket()
+//  var net = require('net');
+//  var socket = new net.Socket()
 
- var events = require('events');
- var e = new events.EventEmitter();
- var request = require('request');
+//  var events = require('events');
+//  var e = new events.EventEmitter();
+//  var request = require('request');
 
- var filterCollection = [];
- var authToken;
+//  var filterCollection = [];
+//  var authToken;
 
-var _ = require('lodash');
+// var _ = require('lodash');
 
- var EventFilter = require('./lib/filter');
+//  var EventFilter = require('./lib/filter');
 
 
 
@@ -38,74 +38,74 @@ module.exports = {
 
 
 
-function authStream(url, id, secret, cb){
-  return cb();
-  var url;
+// function authStream(url, id, secret, cb){
+//   return cb();
+//   var url;
 
-  request({
-    method: 'POST',
-    url: url + '/v1/oauth2/client/token',
-    form:
-    {
-      client_id : id,
-      client_secret: secret,
-      grant_type :'client_credentials'
-    }
-  },
-  function(err, response, body){
-    if (err) console.error(new Error('Token Retrieval Failure : ' + err));
-    if (response.statusCode !== 200){
-      console.error('Event Token Error: ', body);
-    } else {
-      authToken = JSON.parse(body).results.access_token;
-      module.exports.token = authToken;
-    }
-      // TODO: Initialize Socket Connection
+//   request({
+//     method: 'POST',
+//     url: url + '/v1/oauth2/client/token',
+//     form:
+//     {
+//       client_id : id,
+//       client_secret: secret,
+//       grant_type :'client_credentials'
+//     }
+//   },
+//   function(err, response, body){
+//     if (err) console.error(new Error('Token Retrieval Failure : ' + err));
+//     if (response.statusCode !== 200){
+//       console.error('Event Token Error: ', body);
+//     } else {
+//       authToken = JSON.parse(body).results.access_token;
+//       module.exports.token = authToken;
+//     }
+//       // TODO: Initialize Socket Connection
 
-      // TODO: Handle Incoming Sockets, emit events
-      cb();
-    });
-}
-
-
-
-var applyFilter = require('./lib/applyFilter.js')
-
-function testSocket(){
-  var socket = new net.Socket();
-  var BASELINE = 100;
-var STORE_ENTRY_CAMS = [ 10, 11, 12 ];
-var face = new EventFilter('face');
-face.has('age').between(10,35).and.is('sex', 1)
+//       // TODO: Handle Incoming Sockets, emit events
+//       cb();
+//     });
+// }
 
 
-  // face.has('age').between(13,24)
-  // .is({ grumpy: BASELINE })
-  // .has('gender').of('female')
-  // .has('device').within(STORE_ENTRY_CAMS)
-  // .then(function(out){
-  //   // console.log(require('util').inspect(out, {depth:10}));
-  // });
+
+// var applyFilter = require('./lib/applyFilter.js')
+
+// function testSocket(){
+//   var socket = new net.Socket();
+//   var BASELINE = 100;
+// var STORE_ENTRY_CAMS = [ 10, 11, 12 ];
+// var face = new EventFilter('face');
+// face.has('age').between(10,35).and.is('sex', 1)
 
 
-  socket.connect(8132, function(){
-    console.log('Connected to Socket');
+//   // face.has('age').between(13,24)
+//   // .is({ grumpy: BASELINE })
+//   // .has('gender').of('female')
+//   // .has('device').within(STORE_ENTRY_CAMS)
+//   // .then(function(out){
+//   //   // console.log(require('util').inspect(out, {depth:10}));
+//   // });
 
-      socket.write('{ "pissant" : false }');
-    setInterval(function writeFakeFace(){
-      socket.write('{ "pissant" : true }');
-    }, 10000)
-  });
 
-  socket.on('data', function(data) {
-    var dataObj = JSON.parse(data.toString());
+//   socket.connect(8132, function(){
+//     console.log('Connected to Socket');
 
-    console.log('Socket ->', applyFilter(face.val(), dataObj),'\n----------');
-  });
+//       socket.write('{ "pissant" : false }');
+//     setInterval(function writeFakeFace(){
+//       socket.write('{ "pissant" : true }');
+//     }, 10000)
+//   });
 
-  socket.on('error', function(err){
-    console.error(err);
-  })
-}
+//   socket.on('data', function(data) {
+//     var dataObj = JSON.parse(data.toString());
 
-// testSocket();
+//     console.log('Socket ->', applyFilter(face.val(), dataObj),'\n----------');
+//   });
+
+//   socket.on('error', function(err){
+//     console.error(err);
+//   })
+// }
+
+// // testSocket();
