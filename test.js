@@ -23,7 +23,7 @@ describe('EventFilter', function() {
     })
 
     it('should make thing', function(done) {
-      (StreamFilter.eventName).should.ok;
+      (StreamFilter.type).should.ok;
       done();
     });
 
@@ -203,7 +203,7 @@ describe('supports over server ops & callbacks', function(){
     this.timeout(10000);
 
     StreamFilter.is('age',18).then(function(out){
-      out.should.have.keys('eventName', 'filters');
+      out.should.have.keys('type', 'filters');
       done();
     });
 
