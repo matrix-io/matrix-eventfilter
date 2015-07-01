@@ -3,9 +3,9 @@
 **Initialize With**
 
 ```
-var StreamFilter = require('ad-events').StreamFilter;
-var face = new StreamFilter('face');
-var vehicle = new StreamFilter('vehicle');
+var EventFilter = require('ad-events').EventFilter;
+var face = new EventFilter('face');
+var vehicle = new EventFilter('vehicle');
 ```
 
 ## Example Usage
