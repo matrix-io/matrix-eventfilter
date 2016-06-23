@@ -1,5 +1,5 @@
 {
-  "name": "admobilize-eventfilter-sdk",
+  "name": "matrix-eventfilter",
   "version": "0.0.0",
   "description": "Event SDK Module",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org:admobilize/admobilize-eventfilter-sdk.git"
+    "url": "git@github.com:matrix-os/matrix-eventfilter.git"
   },
   "keywords": [
     "admobilize"

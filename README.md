@@ -3,7 +3,7 @@
 **Initialize With**
 
 ```
-var EventFilter = require('ad-events').EventFilter;
+var EventFilter = require('matrix-eventfilter').EventFilter;
 var face = new EventFilter('face');
 var vehicle = new EventFilter('vehicle');
 ```
@@ -12,7 +12,7 @@ var vehicle = new EventFilter('vehicle');
 
 ### Requires Then to Activate
 ```
-// starts stream and queues callback 
+// starts stream and queues callback
 face.then(function(results, filter){})
 ```
 
