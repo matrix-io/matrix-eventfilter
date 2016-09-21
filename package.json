@@ -1,6 +1,6 @@
 {
   "name": "matrix-eventfilter",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Event SDK Module",
   "main": "index.js",
   "scripts": {
