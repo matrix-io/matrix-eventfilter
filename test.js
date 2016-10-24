@@ -1,18 +1,9 @@
 var should = require('should');
 var EventFilter = require('./lib/eventFilter');
 var applyFilter = require('./lib/applyFilter');
-var connect = require('./lib/connect');
-
 
 var StreamFilter = new EventFilter('test');
 describe('EventFilter', function() {
-
-  before(function(done) {
-    this.timeout = 10000;
-    process.env.NODE_ENV = "development";
-    done();
-    // connect.init('',"L04BU70GJU5S49JLNR783UK4UZSYWK0L", "Y7SRP3J1TDOQ49H4GP6AE3C35WXYN9OQ", done);
-  });
 
 
   describe('instance methods', function(){
@@ -24,11 +15,6 @@ describe('EventFilter', function() {
 
     it('should make thing', function(done) {
       (StreamFilter.type).should.ok;
-      done();
-    });
-
-    it.skip('should initialize and have a token', function(done) {
-      StreamFilter.token.should.ok;
       done();
     });
 
@@ -93,6 +79,12 @@ describe('EventFilter', function() {
 
 
   describe('supports has()', function() {
+
+    it('can handle an empty has()', function(){
+        StreamFilter.has().under(25);
+        StreamFilter.filters.should.containDeep([{value: { '$lte':25 }}]);
+    })
+
     it('has().between()', function(done) {
       StreamFilter.has('age').between(18,25);
       StreamFilter.filters.should.containDeep([{age: {'$gte':18,'$lte':25}}]);
@@ -113,6 +105,12 @@ describe('EventFilter', function() {
 
     it('has().under()', function (done) {
       StreamFilter.has('age').under(25);
+      StreamFilter.filters.should.containDeep([{age: {'$lte':25}}]);
+      done();
+    });
+
+    it('has().below()', function (done) {
+      StreamFilter.has('age').below(25);
       StreamFilter.filters.should.containDeep([{age: {'$lte':25}}]);
       done();
     });
@@ -192,28 +190,3 @@ describe('EventFilter', function() {
   });
 
 });
-
-describe('supports over server ops & callbacks', function(){
-  var socket = new require('net').Socket();
-  var Server = require('./lib/server');
-  var StreamFilter =  new EventFilter('test');
-  var server;
-
-  it('supports then & send', function(done){
-    this.timeout(10000);
-
-    StreamFilter.is('age',18).then(function(out){
-      out.should.have.keys('type', 'filters');
-      done();
-    });
-
-    server = Server.start( function(data){
-      var inputFilter  = JSON.parse(data.toString());
-      return inputFilter;
-    })
-
-    socket.connect(8132, function(){
-      StreamFilter.send(socket);
-    });
-  });
-})

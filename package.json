@@ -1,17 +1,19 @@
 {
   "name": "matrix-eventfilter",
   "version": "1.0.0",
-  "description": "Event SDK Module",
+  "description": "Pass/Fail Object based filter. For Matrix OS",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test"
+    "test": "mocha test",
+    "sync": "rsync -e ssh --progress *.js pi@m:~/mos/node_modules/matrix-eventfilter;rsync -ru -e ssh --progress lib pi@m:~/mos/node_modules/matrix-eventfilter;"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:matrix-os/matrix-eventfilter.git"
   },
   "keywords": [
-    "admobilize"
+    "admobilize",
+    "eventfilter"
   ],
   "author": "Sean Canton",
   "license": "ISC",
