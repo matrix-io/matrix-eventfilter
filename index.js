@@ -43,7 +43,7 @@ function (res) {
       module.exports.current = false;
       msg = '(can upgrade to '.yellow+ remoteVersion +')'.yellow
     }
-    debug( '🚷  [ MATRIX ] EventFilter v'.green + currentVersion.grey, msg )
+    // debug( '🚷  [ MATRIX ] EventFilter v'.green + currentVersion.grey, msg )
   });
 }).on('error', function (e) {
   console.error('Upgrade Check Error: ', e)
